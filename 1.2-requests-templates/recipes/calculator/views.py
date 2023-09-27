@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 
 DATA = {
     'omlet': {
@@ -16,7 +17,11 @@ DATA = {
         'сыр, ломтик': 1,
         'помидор, ломтик': 1,
     },
-    # можете добавить свои рецепты ;)
+    'cappuccino': {
+        'молоко, 100 мл': 1,
+        'кофе, 100 мл': 1,
+        'сахар, 2 чайные ложки': 2,
+    },
 }
 
 # Напишите ваш обработчик. Используйте DATA как источник данных
@@ -28,3 +33,12 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+def recipes(request, dish):
+    persons = int(request.GET.get('servings', 1))
+    context = {
+        'recipe': {},
+    }
+    for k, v in DATA.get(dish, {}).items():
+        context['recipe'][k] = v * persons
+    return render(request, 'calculator/index.html', context)
